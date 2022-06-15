@@ -1,0 +1,10 @@
+.git
+*Dockerfile*
+*docker-compose*
+node_modules
+public/**/*
+docker
+coverage
+dist
+./*.sh
+.*
