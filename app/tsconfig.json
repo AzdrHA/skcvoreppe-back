@@ -11,6 +11,13 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "paths": {
+      "@Controller/*": ["src/Controller/*"],
+      "@Module/*": ["app/Module/*"],
+      "@Service/*": ["app/Service/*"],
+      "@Spec/*": ["app/Spec/*"]
+    }
   }
 }

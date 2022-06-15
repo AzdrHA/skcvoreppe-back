@@ -1,0 +1,1 @@
+docker-compose exec node_api sh
