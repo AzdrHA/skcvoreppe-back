@@ -1,11 +1,15 @@
+import 'reflect-metadata';
 import { Logger as NestLogger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './Module/App/AppModule';
+import { ConfigService } from '@nestjs/config';
+import { AppModule } from '@Module/App/AppModule';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+  app.setGlobalPrefix(app.get(ConfigService).get('basePath'));
+  app.enableCors();
   await app.listen(process.env.APP_PORT);
 };
 
