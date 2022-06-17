@@ -15,9 +15,17 @@
     "moduleResolution": "node",
     "paths": {
       "@Controller/*": ["src/Controller/*"],
-      "@Module/*": ["app/Module/*"],
-      "@Service/*": ["app/Service/*"],
-      "@Spec/*": ["app/Spec/*"]
+      "@Module/*": ["src/Module/*"],
+      "@Service/*": ["src/Service/*"],
+      "@Spec/*": ["src/Spec/*"],
+      "@Command/*": ["src/Command/*"],
+      "@Config/*": ["src/Config/*"],
+      "@Connector/*": ["src/Connector/*"],
+      "@Entity/*": ["src/Entity/*"],
+      "@Repository/*": ["src/Repository/*"],
+      "@ServiceApi/*": ["src/ServiceApi/*"],
+      "@ServiceCommand/*": ["src/ServiceCommand/*"],
+      "@Middleware/*": ["src/Middleware/*"],
     }
   }
 }
