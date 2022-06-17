@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+if [ -z "$1" ]
+then
+   echo "Some or all of the parameters are empty";
+   exit 1
+fi
+
+npx nestjs-command $1
