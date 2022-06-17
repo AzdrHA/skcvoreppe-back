@@ -8,5 +8,6 @@ WORKDIR /srv/app
 RUN set -eux;
 
 EXPOSE ${APP_PORT}
+ENV TZ Europe/Paris
 
 ENTRYPOINT ["docker-entrypoint"]
