@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DefaultServiceApi } from './DefaultServiceApi';
-import { Request } from 'express';
 import { JwtTokenService } from '@Service/Jwt/JwtTokenService';
 import { AuthService } from '@Service/AuthService';
+import { Request } from 'express';
+import { User } from '@Entity/User/User';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
@@ -18,11 +19,12 @@ export class AuthServiceApi extends DefaultServiceApi {
     this.authService = authService;
   }
 
-  public async login(request: Request) {
+  public async login(request: Request, userData: User) {
     const user = await this.authService.validateUserCredentials(
-      'b.brand@ascan.io',
-      'azeqsd38',
+      userData.email,
+      userData.password,
     );
+
     return {
       ...user,
       token: this.jwtTokenService.sign({ email: 'b.brand.ascan.io' }),

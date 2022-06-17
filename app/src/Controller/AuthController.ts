@@ -1,7 +1,8 @@
-import { Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { DefaultController } from '@Controller/DefaultController';
 import { Request } from 'express';
 import { AuthServiceApi } from '@ServiceApi/AuthServiceApi';
+import { User } from '@Entity/User/User';
 
 @Controller('/auth')
 export class AuthController extends DefaultController {
@@ -13,10 +14,11 @@ export class AuthController extends DefaultController {
   }
 
   @Post('/login')
-  public login(@Req() request: Request) {
+  public login(@Req() request: Request, @Body() user: User) {
     return this.handleRequest(request, {
       function: 'login',
       service: this.authServiceApi,
+      args: [user],
     });
   }
 }

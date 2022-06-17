@@ -1,27 +1,30 @@
 import { User } from '@Entity/User/User';
 import * as bcrypt from 'bcrypt';
 import { ApiException } from '../Exception/ApiException';
-import { UtilObject } from '../Util/UtilObject';
+import { UserService } from '@Service/UserService';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AuthService {
-  public async validateUserCredentials(email: string, password: string) {
+  private userService: UserService;
+
+  public constructor(userService: UserService) {
+    this.userService = userService;
+  }
+
+  public async validateUserCredentials(
+    email: string,
+    password: string,
+  ): Promise<{ [key: string]: string }> {
     const user = await User.findOneBy({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       user.lastLoginAt = new Date();
       await User.save(user);
 
-      return UtilObject.getNested<User>(user, [
-        'id',
-        'firstname',
-        'lastname',
-        'email',
-        'lastLoginAt',
-        'createdAt',
-        'updateAt',
-      ]);
+      return this.userService.serializeUser(user);
     }
 
-    throw new ApiException('Coucou');
+    throw new ApiException('Email or password are incorrect');
   }
 }

@@ -13,7 +13,7 @@ export class DefaultController {
   public handleRequest(
     request: Request,
     context: DefaultControllerContextType,
-  ) {
+  ): { [key: string]: string } {
     try {
       const service = context['service'] ?? null;
       const fn = context['function'] ?? null;
