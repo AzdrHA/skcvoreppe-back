@@ -3,6 +3,8 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 
 export type AppConfigInterface = {
   basePath: string;
+  sendInBlueKey: string;
+  emailDelivery: string;
   database: MysqlConnectionOptions;
   jwt: JwtModuleOptions;
 };
