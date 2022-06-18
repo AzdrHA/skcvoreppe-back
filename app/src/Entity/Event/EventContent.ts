@@ -13,10 +13,10 @@ export class EventContent extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'varchar', default: null })
+  @Column({ type: 'varchar', default: null, nullable: true })
   public title: string | null = null;
 
-  @Column({ type: 'text', default: null })
+  @Column({ type: 'text', default: null, nullable: true })
   public content: string | null = null;
 
   @OneToOne(() => Event, (event) => event.eventContent)

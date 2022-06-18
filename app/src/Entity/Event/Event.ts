@@ -16,13 +16,13 @@ export class Event extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'enum', enum: [Event.EVENT_LIST] })
+  @Column({ type: 'enum', enum: [Event.EVENT_LIST], nullable: true })
   public code: string | null = null;
 
-  @Column({ type: 'varchar', default: null })
+  @Column({ type: 'varchar', default: null, nullable: true })
   public name: string | null = null;
 
-  @Column({ type: 'varchar', default: null })
+  @Column({ type: 'varchar', default: null, nullable: true })
   public description: string | null = null;
 
   @OneToOne(() => EventContent, (eventContent) => eventContent.event)
