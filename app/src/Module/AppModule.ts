@@ -1,15 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from '@Controller/App/AppController';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import AppConfiguration from '@Config/App/AppConfiguration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommandModule } from 'nestjs-command';
 import { AuthModule } from './AuthModule';
-import { AppService } from '@Service/App/AppService';
-import { SendInBlueConnector } from '@Connector/SendInBlueConnector';
 import { CreateUserCommand } from '@Command/CreateUserCommand';
 import { AuthenticationMiddleware } from '@Middleware/AuthenticationMiddleware';
 import { TranslatorModule } from 'nestjs-translator';
+import { InitEventsCommand } from '@Command/Init/InitEventsCommand';
+import { EventManager } from '../Manager/Event/EventManager';
 
 @Module({
   imports: [
@@ -30,8 +29,7 @@ import { TranslatorModule } from 'nestjs-translator';
     }),
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, SendInBlueConnector, CreateUserCommand],
+  providers: [CreateUserCommand, EventManager, InitEventsCommand],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

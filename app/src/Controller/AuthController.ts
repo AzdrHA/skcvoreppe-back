@@ -21,4 +21,16 @@ export class AuthController extends DefaultController {
       args: [user],
     });
   }
+
+  @Post('/forgot-password')
+  public forgotPassword(
+    @Req() request: Request,
+    @Body() { email }: { email: string },
+  ) {
+    return this.handleRequest(request, {
+      function: 'forgotPassword',
+      service: this.authServiceApi,
+      args: [email],
+    });
+  }
 }
