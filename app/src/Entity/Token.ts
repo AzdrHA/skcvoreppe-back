@@ -46,4 +46,8 @@ export class Token extends BaseEntity implements NotifiableEntityInterface {
   get expiresAt(): Date {
     return this._expiresAt;
   }
+
+  transformObjectToEventData(): { [p: string]: string } {
+    return {};
+  }
 }

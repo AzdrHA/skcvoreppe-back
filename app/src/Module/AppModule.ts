@@ -4,11 +4,11 @@ import AppConfiguration from '@Config/App/AppConfiguration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommandModule } from 'nestjs-command';
 import { AuthModule } from './AuthModule';
-import { CreateUserCommand } from '@Command/CreateUserCommand';
 import { AuthenticationMiddleware } from '@Middleware/AuthenticationMiddleware';
 import { TranslatorModule } from 'nestjs-translator';
 import { InitEventsCommand } from '@Command/Init/InitEventsCommand';
 import { EventManager } from '../Manager/Event/EventManager';
+import { InitUsersCommand } from '@Command/Init/InitUsersCommand';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { EventManager } from '../Manager/Event/EventManager';
     }),
     AuthModule,
   ],
-  providers: [CreateUserCommand, EventManager, InitEventsCommand],
+  providers: [InitUsersCommand, EventManager, InitEventsCommand],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

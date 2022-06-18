@@ -5,24 +5,24 @@ import { AuthService } from '@Service/AuthService';
 import { Request } from 'express';
 import { User } from '@Entity/User/User';
 import { ApiException } from '../Exception/ApiException';
-import { Token, TokenFormat } from '@Entity/Token';
-import { SendInBlueConnector } from '@Connector/SendInBlueConnector';
+import { NotifEventDispatcher } from '../Dispatcher/NotifEventDispatcher';
+import { Event } from '@Entity/Event/Event';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
   private jwtTokenService: JwtTokenService;
   private authService: AuthService;
-  private sendInBlueConnector: SendInBlueConnector;
+  private notifEventDispatcher: NotifEventDispatcher;
 
   public constructor(
     jwtTokenService: JwtTokenService,
     authService: AuthService,
-    sendInBlueConnector: SendInBlueConnector,
+    notifEventDispatcher: NotifEventDispatcher,
   ) {
     super();
     this.jwtTokenService = jwtTokenService;
     this.authService = authService;
-    this.sendInBlueConnector = sendInBlueConnector;
+    this.notifEventDispatcher = notifEventDispatcher;
   }
 
   public async login(request: Request, userData: User) {
@@ -38,10 +38,14 @@ export class AuthServiceApi extends DefaultServiceApi {
   }
 
   public async forgotPassword(request: Request, email: string) {
-    await this.sendInBlueConnector.sendDirectEmail(['azdracito@gmail.com'], {
-      subject: 'couycou',
-      body: 'coucop',
-    });
+    const user = await User.findOneBy({ email });
+    if (!user) throw new ApiException('User not found');
+
+    return this.notifEventDispatcher.dispatchMessage(
+      Event.USER_FORGOT_PASSWORD,
+      user,
+    );
+
     /*const user = await User.findOneBy({ email });
     if (!user) throw new ApiException('User not found');
 

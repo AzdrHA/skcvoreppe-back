@@ -3,15 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Token } from '@Entity/Token';
+import { NotifiableEntityInterface } from '../../Type/NotifiableEntityInterface';
 
 @Entity('user')
-export class User extends BaseEntity {
+export class User extends BaseEntity implements NotifiableEntityInterface {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -41,4 +41,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Token, (token) => token.user)
   public tokens: Token[];
+
+  transformObjectToEventData(): { [p: string]: string } {
+    return {
+      password: this.password,
+    };
+  }
 }
