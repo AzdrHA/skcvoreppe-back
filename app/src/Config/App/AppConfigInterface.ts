@@ -5,6 +5,8 @@ export type AppConfigInterface = {
   basePath: string;
   sendInBlueKey: string;
   emailDelivery: string;
+  emailSenderName: string;
+  emailSenderEmail: string;
   database: MysqlConnectionOptions;
   jwt: JwtModuleOptions;
 };
