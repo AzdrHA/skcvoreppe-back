@@ -1,31 +1,44 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Token } from '@Entity/Token';
 
 @Entity('user')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public firstname: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public lastname: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public password: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public salt: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public email: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   public lastLoginAt: Date;
 
-  @Column()
+  @CreateDateColumn({ type: 'datetime' })
   public createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({ type: 'datetime' })
   public updateAt: Date;
+
+  @OneToMany(() => Token, (token) => token.user)
+  public tokens: Token[];
 }
