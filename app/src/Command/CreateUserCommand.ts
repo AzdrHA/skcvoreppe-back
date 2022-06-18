@@ -11,9 +11,9 @@ export class CreateUserCommand {
     const user = new User();
     user.firstname = 'Baptiste';
     user.lastname = 'Brand';
-    user.password = await bcrypt.hash('azeqsd38', salt);
+    user.password = await bcrypt.hash('Azeqsd38', salt);
     user.salt = salt;
-    user.email = 'b.brand@ascan.io';
+    user.email = 'azdracito@gmail.com';
     user.lastLoginAt = new Date();
     user.createdAt = new Date();
     user.updateAt = new Date();
