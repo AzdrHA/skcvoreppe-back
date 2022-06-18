@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 export type EmailContext = {
   subject: string;
   body: string;
+  htmlContent: string;
 };
 
 @Injectable()
@@ -20,7 +21,7 @@ export class SendInBlueConnector {
     this.delivery_address = configService.get('emailDelivery');
   }
 
-  public prepareSend(): TransactionalEmailsApi {
+  private prepareSend(): TransactionalEmailsApi {
     const apiInstance = new TransactionalEmailsApi();
     apiInstance.setApiKey(0, this.apiKey);
     return apiInstance;
@@ -49,6 +50,7 @@ export class SendInBlueConnector {
       const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
     } catch (e) {
       console.log('Failed to send email: ');
+      console.log(e);
     }
   }
 }
