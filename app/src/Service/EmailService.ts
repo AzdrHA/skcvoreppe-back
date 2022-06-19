@@ -3,9 +3,7 @@ import {
   EmailContext,
   SendInBlueConnector,
 } from '@Connector/SendInBlueConnector';
-import Handlebars from 'handlebars';
-import * as path from 'path';
-import * as fs from 'fs';
+import { TemplateService } from '@Service/TemplateService';
 
 export type EmailParams = {
   title: string;
@@ -15,17 +13,16 @@ export type EmailParams = {
 @Injectable()
 export class EmailService {
   private sendInBlueConnector: SendInBlueConnector;
-  constructor(sendInBlueConnector: SendInBlueConnector) {
+  private templateService: TemplateService;
+  constructor(
+    sendInBlueConnector: SendInBlueConnector,
+    templateService: TemplateService,
+  ) {
     this.sendInBlueConnector = sendInBlueConnector;
+    this.templateService = templateService;
   }
 
   public async sendEmail(params: EmailParams, context: EmailContext) {
-    const template = Handlebars.compile(
-      fs
-        .readFileSync(path.join(__dirname, '../../', 'templates/email.hbs'))
-        .toString(),
-    );
-
     const templateParams = Object.assign(
       {
         url: 'https://www.skcvoreppe.fr',
@@ -37,10 +34,27 @@ export class EmailService {
       params,
     );
 
-    const htmlContent = Handlebars.compile(context.htmlContent);
-    templateParams.content = htmlContent(templateParams);
+    // RENDER PARTIALS
+    const emailPartials = ['content', 'footer', 'header'];
+    emailPartials.forEach((partial) => {
+      this.templateService.registerPartial(
+        partial,
+        `Email/partials/_${partial}.html.hbs`,
+        templateParams,
+      );
+    });
 
-    context.body = template(templateParams);
+    // RENDER BODY CONTENT
+    templateParams.content = this.templateService.render(
+      context.htmlContent,
+      templateParams,
+    );
+
+    // RENDER BASE EMAIL
+    context.body = this.templateService.renderTemplate(
+      'Email/base.html.hbs',
+      templateParams,
+    );
 
     return this.sendInBlueConnector.sendDirectEmail(
       ['b.brand@ascan.io'],
