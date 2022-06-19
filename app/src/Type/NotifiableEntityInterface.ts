@@ -1,3 +1,3 @@
 export interface NotifiableEntityInterface {
-  transformObjectToEventData(): { [key: string]: string };
+  transformObjectToEventData(): { [key: string]: any };
 }

@@ -7,6 +7,7 @@ import { AuthServiceApi } from '@ServiceApi/AuthServiceApi';
 import { AuthService } from '@Service/AuthService';
 import { UserService } from '@Service/UserService';
 import { MailerModule } from '@Module/MailerModule';
+import { TokenService } from '@Service/TokenService';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MailerModule } from '@Module/MailerModule';
     AuthServiceApi,
     JwtTokenService,
     ConfigService,
+    TokenService,
   ],
 })
 export class AuthModule {}

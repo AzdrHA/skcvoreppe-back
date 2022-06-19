@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { User } from '@Entity/User/User';
 import { NotifiableEntityInterface } from '../Type/NotifiableEntityInterface';
-import * as crypto from 'crypto';
 
 export enum TokenFormat {
   FORGOT_PASSWORD = 'forgot_password',
@@ -22,13 +21,13 @@ export class Token extends BaseEntity implements NotifiableEntityInterface {
   public id: number;
 
   @Column({ type: 'varchar' })
-  public token: string = crypto.randomBytes(32).toString('hex');
+  public token: string;
 
-  @CreateDateColumn({ type: 'datetime', name: 'requestAt' })
-  private _requestAt: Date = new Date();
+  @CreateDateColumn({ type: 'datetime' })
+  public requestAt: Date;
 
-  @Column({ type: 'datetime', name: 'expiresAt' })
-  private _expiresAt: Date = new Date(Date.now() + this.REQUEST_VALIDATION);
+  @Column({ type: 'datetime' })
+  public expiresAt: Date;
 
   @Column({
     type: 'enum',
@@ -39,15 +38,11 @@ export class Token extends BaseEntity implements NotifiableEntityInterface {
   @ManyToOne(() => User, (user) => user.tokens)
   public user: User;
 
-  get requestAt(): Date {
-    return this._requestAt;
-  }
-
-  get expiresAt(): Date {
-    return this._expiresAt;
-  }
-
-  transformObjectToEventData(): { [p: string]: string } {
-    return {};
+  transformObjectToEventData(): { [key: string]: any } {
+    return {
+      token: this.token,
+      type: this.type,
+      user: this.user.transformObjectToEventData(),
+    };
   }
 }

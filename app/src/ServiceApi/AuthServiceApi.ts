@@ -7,22 +7,26 @@ import { User } from '@Entity/User/User';
 import { ApiException } from '../Exception/ApiException';
 import { NotifEventDispatcher } from '../Dispatcher/NotifEventDispatcher';
 import { Event } from '@Entity/Event/Event';
+import { TokenService } from '@Service/TokenService';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
   private jwtTokenService: JwtTokenService;
   private authService: AuthService;
   private notifEventDispatcher: NotifEventDispatcher;
+  private tokenService: TokenService;
 
   public constructor(
     jwtTokenService: JwtTokenService,
     authService: AuthService,
     notifEventDispatcher: NotifEventDispatcher,
+    tokenService: TokenService,
   ) {
     super();
     this.jwtTokenService = jwtTokenService;
     this.authService = authService;
     this.notifEventDispatcher = notifEventDispatcher;
+    this.tokenService = tokenService;
   }
 
   public async login(request: Request, userData: User) {
@@ -41,19 +45,12 @@ export class AuthServiceApi extends DefaultServiceApi {
     const user = await User.findOneBy({ email });
     if (!user) throw new ApiException('User not found');
 
-    return this.notifEventDispatcher.dispatchMessage(
-      Event.USER_FORGOT_PASSWORD,
-      user,
-    );
-
-    /*const user = await User.findOneBy({ email });
-    if (!user) throw new ApiException('User not found');
-
-    const token = new Token();
-    token.user = user;
-    token.type = TokenFormat.FORGOT_PASSWORD;
+    const token = this.tokenService.generateToken(user);
     await token.save();
 
-    console.log(email);*/
+    return this.notifEventDispatcher.dispatchMessage(
+      Event.USER_FORGOT_PASSWORD,
+      token,
+    );
   }
 }
