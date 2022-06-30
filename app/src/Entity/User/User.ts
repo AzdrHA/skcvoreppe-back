@@ -9,6 +9,13 @@ import {
 } from 'typeorm';
 import { Token } from '@Entity/Token';
 import { NotifiableEntityInterface } from '../../Type/NotifiableEntityInterface';
+import { Member } from '@Entity/Member/Member';
+
+export enum UserRoles {
+  ROLE_USER = 'ROLE_USER',
+  ROLE_ADMIN = 'ROLE_ADMIN',
+  ROLE_SYSADMIN = 'ROLE_SYSADMIN',
+}
 
 @Entity('user')
 export class User extends BaseEntity implements NotifiableEntityInterface {
@@ -41,6 +48,12 @@ export class User extends BaseEntity implements NotifiableEntityInterface {
 
   @OneToMany(() => Token, (token) => token.user)
   public tokens: Token[];
+
+  @OneToMany(() => Member, (member) => member.user)
+  public members: Member[];
+
+  @Column({ type: 'enum', enum: UserRoles, default: UserRoles.ROLE_USER })
+  public role?: UserRoles | null = UserRoles.ROLE_USER;
 
   transformObjectToEventData(): { [p: string]: string } {
     return {

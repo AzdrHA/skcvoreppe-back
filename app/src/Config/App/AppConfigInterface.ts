@@ -7,6 +7,9 @@ export type AppConfigInterface = {
   emailDelivery: string;
   emailSenderName: string;
   emailSenderEmail: string;
+  emailContact: string;
+  phoneContact: string;
+  siret: string;
   database: MysqlConnectionOptions;
   jwt: JwtModuleOptions;
 };

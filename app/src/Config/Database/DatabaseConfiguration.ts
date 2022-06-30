@@ -9,7 +9,10 @@ export default (): MysqlConnectionOptions => ({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [path.join(__dirname, '../../Entity/**/*{.ts,.js}')],
+  migrationsTableName: 'migrations',
+  subscribers: ['dist/Subscriber/*.js'],
+  migrations: ['dist/Migrations/*.js'],
   logging: false,
-  synchronize: false,
+  synchronize: true,
   entityPrefix: process.env.DB_TABLE_PREFIX,
 });

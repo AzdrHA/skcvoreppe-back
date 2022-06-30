@@ -4,6 +4,7 @@ import {
   SendInBlueConnector,
 } from '@Connector/SendInBlueConnector';
 import { TemplateService } from '@Service/TemplateService';
+import { ConfigService } from '@nestjs/config';
 
 export type EmailParams = {
   title: string;
@@ -14,21 +15,25 @@ export type EmailParams = {
 export class EmailService {
   private sendInBlueConnector: SendInBlueConnector;
   private templateService: TemplateService;
+  private configService: ConfigService;
+
   constructor(
     sendInBlueConnector: SendInBlueConnector,
     templateService: TemplateService,
+    configService: ConfigService,
   ) {
     this.sendInBlueConnector = sendInBlueConnector;
     this.templateService = templateService;
+    this.configService = configService;
   }
 
   public async sendEmail(params: EmailParams, context: EmailContext) {
     const templateParams = Object.assign(
       {
         url: 'https://www.skcvoreppe.fr',
-        emailContact: 'contact@skcvoreppe.fr',
-        phoneContact: '0627185045',
-        siret: '44072251000011',
+        emailContact: this.configService.get('emailContact'),
+        phoneContact: this.configService.get('phoneContact'),
+        siret: this.configService.get('siret'),
         receiver: 'Baptiste Brand',
       },
       params,

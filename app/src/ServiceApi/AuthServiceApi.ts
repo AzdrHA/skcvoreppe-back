@@ -48,9 +48,11 @@ export class AuthServiceApi extends DefaultServiceApi {
     const token = this.tokenService.generateToken(user);
     await token.save();
 
-    return this.notifEventDispatcher.dispatchMessage(
+    await this.notifEventDispatcher.dispatchMessage(
       Event.USER_FORGOT_PASSWORD,
       token,
     );
+
+    return { test: 'sfsf' };
   }
 }

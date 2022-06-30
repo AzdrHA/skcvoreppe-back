@@ -8,6 +8,9 @@ export default (): AppConfigInterface => ({
   emailDelivery: process.env.EMAIL_DELIVERY,
   emailSenderName: process.env.EMAIL_SEND_NAME,
   emailSenderEmail: process.env.EMAIL_SEND_EMAIL,
+  emailContact: process.env.EMAIL_CONTACT,
+  phoneContact: process.env.PHONE_CONTACT,
+  siret: process.env.SIRET,
   database: DatabaseConfiguration(),
   jwt: JwtConfiguration(),
 });
