@@ -36,3 +36,5 @@ cmake-build-debug/
 /app/node_modules
 /mariadb
 !**/*.gitkeep
+
+node_modules
