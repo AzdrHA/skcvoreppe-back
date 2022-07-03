@@ -27,4 +27,10 @@ export class AuthService {
 
     throw new ApiException('Email or password are incorrect');
   }
+
+  public async encryptPassword(user: User, plainPassword: string) {
+    const salt = await bcrypt.genSalt();
+    user.salt = salt;
+    user.password = await bcrypt.hash(plainPassword, salt);
+  }
 }

@@ -9,6 +9,7 @@ import { TranslatorModule } from 'nestjs-translator';
 import { InitEventsCommand } from '@Command/Init/InitEventsCommand';
 import { EventManager } from '../Manager/Event/EventManager';
 import { InitUsersCommand } from '@Command/Init/InitUsersCommand';
+import { InitUserGenderCommand } from '@Command/Init/InitUserGenderCommand';
 
 @Module({
   imports: [
@@ -29,7 +30,12 @@ import { InitUsersCommand } from '@Command/Init/InitUsersCommand';
     }),
     AuthModule,
   ],
-  providers: [InitUsersCommand, EventManager, InitEventsCommand],
+  providers: [
+    InitUsersCommand,
+    EventManager,
+    InitEventsCommand,
+    InitUserGenderCommand,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

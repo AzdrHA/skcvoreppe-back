@@ -22,6 +22,15 @@ export class AuthController extends DefaultController {
     });
   }
 
+  @Post('/register')
+  public register(@Req() request: Request, @Body() user: User) {
+    return this.handleRequest(request, {
+      function: 'register',
+      service: this.authServiceApi,
+      args: [user],
+    });
+  }
+
   @Post('/forgot-password')
   public forgotPassword(
     @Req() request: Request,

@@ -11,10 +11,7 @@ export class InitEventsCommand {
   }
 
   public events = [
-    {
-      code: Event.USER_FORGOT_PASSWORD,
-      name: 'Mot de passe oublié',
-    },
+    { code: Event.USER_FORGOT_PASSWORD, name: 'Mot de passe oublié' },
   ];
 
   @Command({ command: 'init:events:create' })

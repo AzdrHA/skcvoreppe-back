@@ -10,6 +10,7 @@ export class UserService {
       'firstname',
       'lastname',
       'email',
+      'role',
       'lastLoginAt',
       'createdAt',
       'updateAt',
