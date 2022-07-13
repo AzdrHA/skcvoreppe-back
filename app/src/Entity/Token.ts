@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -14,7 +13,7 @@ export enum TokenFormat {
 }
 
 @Entity('token')
-export class Token extends BaseEntity implements NotifiableEntityInterface {
+export class Token implements NotifiableEntityInterface {
   public REQUEST_VALIDATION = 60 * 1000 * 10;
 
   @PrimaryGeneratedColumn()

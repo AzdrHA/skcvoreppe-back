@@ -10,9 +10,18 @@ import { InitEventsCommand } from '@Command/Init/InitEventsCommand';
 import { EventManager } from '../Manager/Event/EventManager';
 import { InitUsersCommand } from '@Command/Init/InitUsersCommand';
 import { InitUserGenderCommand } from '@Command/Init/InitUserGenderCommand';
+import { TypeOrmExModule } from '../typeorm-ex.module';
+import { UserRepository } from '@Repository/User/UserRepository';
+import { EventRepository } from '@Repository/Event/EventRepository';
+import { UserGenderRepository } from '@Repository/User/UserGenderRepository';
 
 @Module({
   imports: [
+    TypeOrmExModule.forCustomRepository([
+      UserRepository,
+      EventRepository,
+      UserGenderRepository,
+    ]),
     TranslatorModule.forRoot({
       global: true,
       defaultLang: 'en',

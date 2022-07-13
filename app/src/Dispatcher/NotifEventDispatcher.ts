@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Event } from '@Entity/Event/Event';
 import { ApiException } from '../Exception/ApiException';
 import { NotifiableEntityInterface } from '../Type/NotifiableEntityInterface';
 import { EmailParams, EmailService } from '@Service/EmailService';
 import { EmailContext } from '@Connector/SendInBlueConnector';
+import { EventRepository } from '@Repository/Event/EventRepository';
 
 @Injectable()
 export class NotifEventDispatcher {
   private emailService: EmailService;
-  constructor(emailService: EmailService) {
+  private eventRepository: EventRepository;
+  constructor(emailService: EmailService, eventRepository: EventRepository) {
     this.emailService = emailService;
+    this.eventRepository = eventRepository;
   }
 
   /**
@@ -20,7 +22,7 @@ export class NotifEventDispatcher {
     code: string,
     object: NotifiableEntityInterface,
   ) {
-    const event = await Event.findOne({
+    const event = await this.eventRepository.findOne({
       where: {
         code,
       },

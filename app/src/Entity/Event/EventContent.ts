@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -9,7 +8,7 @@ import {
 import { Event } from '@Entity/Event/Event';
 
 @Entity('event_content')
-export class EventContent extends BaseEntity {
+export class EventContent {
   @PrimaryGeneratedColumn()
   public id: number;
 

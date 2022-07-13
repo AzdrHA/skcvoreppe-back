@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { UserGender } from '@Entity/User/UserGender';
+import { UserGenderRepository } from '@Repository/User/UserGenderRepository';
 
 @Injectable()
 export class InitUserGenderCommand {
+  private userGenderRepository: UserGenderRepository;
+  constructor(userGenderRepository: UserGenderRepository) {
+    this.userGenderRepository = userGenderRepository;
+  }
+
   public genders: { code: string; description: string }[] = [
     { code: 'female', description: 'Femme' },
     { code: 'male', description: 'Homme' },
@@ -17,11 +23,11 @@ export class InitUserGenderCommand {
   @Command({ command: 'init:user_gender:create' })
   public async execute() {
     for (const { code, description } of this.genders) {
-      let nGender = await UserGender.findOneBy({ code });
+      let nGender = await this.userGenderRepository.findOneBy({ code });
       if (!nGender) nGender = new UserGender();
       nGender.code = code;
       nGender.description = description;
-      await UserGender.save(nGender);
+      await this.userGenderRepository.save(nGender);
       console.log(`Gender ${code} - ${description} created!`);
     }
   }

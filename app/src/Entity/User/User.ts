@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -20,7 +19,12 @@ export enum UserRoles {
 }
 
 @Entity('user')
-export class User extends BaseEntity implements NotifiableEntityInterface {
+export class User implements NotifiableEntityInterface {
+  public ADMIN_ROLES: string[] = [
+    UserRoles.ROLE_SYSADMIN,
+    UserRoles.ROLE_ADMIN,
+  ];
+
   @PrimaryGeneratedColumn()
   public id: number;
 

@@ -1,16 +1,10 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { NotifiableEntityInterface } from '../../Type/NotifiableEntityInterface';
 import { User } from '@Entity/User/User';
 import { UtilDate } from '../../Util/UtilDate';
 
 @Entity('member')
-export class Member extends BaseEntity implements NotifiableEntityInterface {
+export class Member implements NotifiableEntityInterface {
   @PrimaryGeneratedColumn()
   public id: number;
 

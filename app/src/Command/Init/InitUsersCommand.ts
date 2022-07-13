@@ -3,9 +3,22 @@ import { Command } from 'nestjs-command';
 import { User, UserRoles } from '@Entity/User/User';
 import * as bcrypt from 'bcrypt';
 import { UserGender } from '@Entity/User/UserGender';
+import { UserRepository } from '@Repository/User/UserRepository';
+import { UserGenderRepository } from '@Repository/User/UserGenderRepository';
 
 @Injectable()
 export class InitUsersCommand {
+  private userRepository: UserRepository;
+  private userGenderRepository: UserGenderRepository;
+
+  constructor(
+    useRepository: UserRepository,
+    userGenderRepository: UserGenderRepository,
+  ) {
+    this.userRepository = useRepository;
+    this.userGenderRepository = userGenderRepository;
+  }
+
   public users: {
     firstname: string;
     lastname: string;
@@ -59,10 +72,12 @@ export class InitUsersCommand {
   @Command({ command: 'init:users:create' })
   public async execute() {
     for (const user of this.users) {
-      const gender = await UserGender.findOneBy({ code: user.gender });
+      const gender = await this.userGenderRepository.findOneBy({
+        code: user.gender,
+      });
 
       const salt = await bcrypt.genSalt();
-      let nUser = await User.findOneBy({ email: user.email });
+      let nUser = await this.userRepository.findOneBy({ email: user.email });
       if (!nUser) nUser = new User();
       nUser.firstname = user.firstname;
       nUser.lastname = user.lastname;
@@ -75,7 +90,7 @@ export class InitUsersCommand {
       nUser.createdAt = new Date();
       nUser.updateAt = new Date();
       nUser.gender = gender;
-      await User.save(nUser);
+      await this.userRepository.save(nUser);
       console.log(`${user.firstname} ${user.lastname} created!`);
     }
   }

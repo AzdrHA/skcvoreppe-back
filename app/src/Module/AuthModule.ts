@@ -8,6 +8,9 @@ import { AuthService } from '@Service/AuthService';
 import { UserService } from '@Service/UserService';
 import { MailerModule } from '@Module/MailerModule';
 import { TokenService } from '@Service/TokenService';
+import { TypeOrmExModule } from '../typeorm-ex.module';
+import { UserRepository } from '@Repository/User/UserRepository';
+import { TokenRepository } from '@Repository/TokenRepository';
 
 @Module({
   imports: [
@@ -17,6 +20,7 @@ import { TokenService } from '@Service/TokenService';
       useFactory: (configService: ConfigService) => configService.get('jwt'),
       inject: [ConfigService],
     }),
+    TypeOrmExModule.forCustomRepository([UserRepository, TokenRepository]),
   ],
   controllers: [AuthController],
   providers: [

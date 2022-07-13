@@ -9,6 +9,8 @@ import { NotifEventDispatcher } from '../Dispatcher/NotifEventDispatcher';
 import { Event } from '@Entity/Event/Event';
 import { TokenService } from '@Service/TokenService';
 import { UserService } from '@Service/UserService';
+import { UserRepository } from '@Repository/User/UserRepository';
+import { TokenRepository } from '@Repository/TokenRepository';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
@@ -17,6 +19,8 @@ export class AuthServiceApi extends DefaultServiceApi {
   private notifEventDispatcher: NotifEventDispatcher;
   private tokenService: TokenService;
   private userService: UserService;
+  private userRepository: UserRepository;
+  private tokenRepository: TokenRepository;
 
   public constructor(
     jwtTokenService: JwtTokenService,
@@ -24,6 +28,8 @@ export class AuthServiceApi extends DefaultServiceApi {
     notifEventDispatcher: NotifEventDispatcher,
     tokenService: TokenService,
     userService: UserService,
+    userRepository: UserRepository,
+    tokenRepository: TokenRepository,
   ) {
     super();
     this.jwtTokenService = jwtTokenService;
@@ -31,6 +37,8 @@ export class AuthServiceApi extends DefaultServiceApi {
     this.notifEventDispatcher = notifEventDispatcher;
     this.tokenService = tokenService;
     this.userService = userService;
+    this.userRepository = userRepository;
+    this.tokenRepository = tokenRepository;
   }
 
   public async login(request: Request, userData: User) {
@@ -51,18 +59,18 @@ export class AuthServiceApi extends DefaultServiceApi {
   }
 
   public async register(request: Request, userDate: User) {
-    const user = User.create(userDate);
+    const user = this.userRepository.create(userDate);
     await this.authService.encryptPassword(user, user.password);
-    await user.save();
+    await this.userRepository.save(user);
     return this.userService.serializeUser(user);
   }
 
   public async forgotPassword(request: Request, email: string) {
-    const user = await User.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email });
     if (!user) throw new ApiException('User not found');
 
     const token = this.tokenService.generateToken(user);
-    await token.save();
+    await this.tokenRepository.save(token);
 
     await this.notifEventDispatcher.dispatchMessage(
       Event.USER_FORGOT_PASSWORD,

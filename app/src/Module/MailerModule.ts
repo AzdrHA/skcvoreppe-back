@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { NotifEventDispatcher } from '../Dispatcher/NotifEventDispatcher';
 import { EmailService } from '@Service/EmailService';
 import { TemplateService } from '@Service/TemplateService';
+import { TypeOrmExModule } from '../typeorm-ex.module';
+import { EventRepository } from '@Repository/Event/EventRepository';
+import { EventContentRepository } from '@Repository/Event/EventContentRepository';
 
 @Module({
   providers: [
@@ -12,6 +15,12 @@ import { TemplateService } from '@Service/TemplateService';
     NotifEventDispatcher,
     EmailService,
     TemplateService,
+  ],
+  imports: [
+    TypeOrmExModule.forCustomRepository([
+      EventRepository,
+      EventContentRepository,
+    ]),
   ],
   exports: [
     ConfigService,
