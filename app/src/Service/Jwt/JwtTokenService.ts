@@ -6,21 +6,26 @@ import { RefreshToken } from '@Entity/RefreshToken';
 import * as randtoken from 'rand-token';
 import { ApiException } from '../../Exception/ApiException';
 import { TranslatorService } from 'nestjs-translator';
+import { User } from '@Entity/User/User';
+import { UserService } from '@Service/UserService';
 
 @Injectable()
 export class JwtTokenService {
   private jwtService: JwtService;
   private refreshTokenRepository: RefreshTokenRepository;
   private translator: TranslatorService;
+  private userService: UserService;
 
   public constructor(
     jwtService: JwtService,
     refreshTokenRepository: RefreshTokenRepository,
     translator: TranslatorService,
+    userService: UserService,
   ) {
     this.jwtService = jwtService;
     this.refreshTokenRepository = refreshTokenRepository;
     this.translator = translator;
+    this.userService = userService;
   }
 
   public async sign(payload: { email: string }, options?: JwtSignOptions) {
@@ -34,7 +39,11 @@ export class JwtTokenService {
     const validDate = new Date();
     validDate.setDate(validDate.getDate() + 2);
 
-    const refreshToken = new RefreshToken();
+    let refreshToken = await this.refreshTokenRepository.findOneBy({
+      email: payload.email,
+    });
+
+    if (!refreshToken) refreshToken = new RefreshToken();
     refreshToken.email = payload.email;
     refreshToken.refresh_token = randtoken.suid(60);
     refreshToken.valid = validDate;
@@ -43,12 +52,20 @@ export class JwtTokenService {
   }
 
   public async checkRefreshToken(refreshToken: string) {
-    const token = await this.refreshTokenRepository.findOneBy({
-      refresh_token: refreshToken,
-    });
+    const token = await this.refreshTokenRepository
+      .createQueryBuilder('t')
+      .leftJoinAndMapOne('t.user', User, 'user', 't.email = user.email')
+      .andWhere('t.refresh_token = :refresh_token')
+      .setParameter('refresh_token', refreshToken)
+      .getOne();
 
     if (token && token.valid > new Date()) {
-      return this.sign({ email: token.email });
+      return {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ...this.userService.serializeUser(token.user),
+        ...(await this.sign({ email: token.email })),
+      };
     }
 
     throw new ApiException(this.translator.translate('INVALID_REFRESH_TOKEN'));

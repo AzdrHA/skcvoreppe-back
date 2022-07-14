@@ -11,6 +11,7 @@ import { Token } from '@Entity/Token';
 import { NotifiableEntityInterface } from '../../Type/NotifiableEntityInterface';
 import { Member } from '@Entity/Member/Member';
 import { UserGender } from '@Entity/User/UserGender';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export enum UserRoles {
   ROLE_USER = 'ROLE_USER',
@@ -20,11 +21,6 @@ export enum UserRoles {
 
 @Entity('user')
 export class User implements NotifiableEntityInterface {
-  public ADMIN_ROLES: string[] = [
-    UserRoles.ROLE_SYSADMIN,
-    UserRoles.ROLE_ADMIN,
-  ];
-
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -34,12 +30,17 @@ export class User implements NotifiableEntityInterface {
   @Column({ type: 'varchar' })
   public lastname: string;
 
+  @IsString({ groups: ['login'] })
+  @IsNotEmpty({ groups: ['login'] })
   @Column({ type: 'varchar' })
   public password: string;
 
   @Column({ type: 'varchar' })
   public salt: string;
 
+  @IsString({ groups: ['forgotPassword', 'login'] })
+  @IsNotEmpty({ groups: ['forgotPassword', 'login'] })
+  @IsEmail({ groups: ['forgotPassword', 'login'] })
   @Column({ type: 'varchar', unique: true })
   public email: string;
 
@@ -53,10 +54,10 @@ export class User implements NotifiableEntityInterface {
   public dateOfBirth: Date;
 
   @Column({ type: 'varchar', nullable: true })
-  public lastLoginAt: Date | null = null;
+  public lastLoginAt: Date | null;
 
   @Column({ type: 'enum', enum: UserRoles, default: UserRoles.ROLE_USER })
-  public role?: UserRoles | null = UserRoles.ROLE_USER;
+  public role?: UserRoles | null;
 
   @CreateDateColumn({ type: 'datetime' })
   public createdAt: Date;

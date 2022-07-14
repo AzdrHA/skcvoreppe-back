@@ -40,11 +40,11 @@ export class EmailService {
     );
 
     // RENDER PARTIALS
-    const emailPartials = ['content', 'footer', 'header'];
+    const emailPartials = ['_content', '_footer', '_header'];
     emailPartials.forEach((partial) => {
       this.templateService.registerPartial(
         partial,
-        `Email/partials/_${partial}.html.hbs`,
+        `Email/partials/${partial}.html.hbs`,
         templateParams,
       );
     });

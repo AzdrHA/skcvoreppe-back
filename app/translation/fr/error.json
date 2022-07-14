@@ -1,6 +1,8 @@
 {
-  "INVALID_REFRESH_TOKEN": "Le token d'actualisation n'existe pas ou est invalide",
+  "INVALID_REFRESH_TOKEN": "Le token d'actualisation n'existe pas ou est invalide.",
   "EMAIL_OR_PASSWORD_INCORRECT": "Mauvais identifiant ou mot de passe.",
-  "USER_NOT_FOUND": "L'utilisateur est introuvable",
-  "ACCOUNT_NOT_ENABLED": "Vous n'avez pas encore valider votre compte"
+  "USER_NOT_FOUND": "Impossible de trouver votre compte.",
+  "ACCOUNT_NOT_ENABLED": "Vous n'avez pas encore valider votre compte.",
+  "TOKEN_INVALID_OR_EXPIRED": "La demande est invalide ou est arrivé à date d'expiration.",
+  "PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH": "La confirmation de mot de passe ne concorde pas avec le nouveau mot de passe."
 }

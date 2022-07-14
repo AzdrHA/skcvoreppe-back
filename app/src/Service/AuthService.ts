@@ -28,10 +28,12 @@ export class AuthService {
   ): Promise<{ [key: string]: string }> {
     const user = await this.userRepository.findOneBy({ email });
 
-    if (!user.enabled)
-      throw new ApiException(this.translator.translate('ACCOUNT_NOT_ENABLED'));
-
     if (user && (await bcrypt.compare(password, user.password))) {
+      if (!user.enabled)
+        throw new ApiException(
+          this.translator.translate('ACCOUNT_NOT_ENABLED'),
+        );
+
       user.lastLoginAt = new Date();
       await this.userRepository.save(user);
 

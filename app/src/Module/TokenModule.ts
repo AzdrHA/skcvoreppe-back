@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtTokenService } from '@Service/Jwt/JwtTokenService';
 import { TypeOrmExModule } from '../typeorm-ex.module';
 import { RefreshTokenRepository } from '@Repository/RefreshTokenRepository';
+import { UserService } from '@Service/UserService';
 
 @Module({
   imports: [
@@ -14,9 +15,10 @@ import { RefreshTokenRepository } from '@Repository/RefreshTokenRepository';
     }),
     TypeOrmExModule.forCustomRepository([RefreshTokenRepository]),
   ],
-  providers: [JwtTokenService],
+  providers: [JwtTokenService, UserService],
   exports: [
     JwtTokenService,
+    UserService,
     TypeOrmExModule.forCustomRepository([RefreshTokenRepository]),
   ],
 })

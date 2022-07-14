@@ -10,11 +10,12 @@ import { NotifiableEntityInterface } from '../Type/NotifiableEntityInterface';
 
 export enum TokenFormat {
   FORGOT_PASSWORD = 'forgot_password',
+  EMAIL_VERIFICATION = 'email_verification',
 }
 
 @Entity('token')
 export class Token implements NotifiableEntityInterface {
-  public REQUEST_VALIDATION = 60 * 1000 * 10;
+  public static REQUEST_VALIDATION = 60 * 1000 * 10;
 
   @PrimaryGeneratedColumn()
   public id: number;
@@ -26,7 +27,7 @@ export class Token implements NotifiableEntityInterface {
   public requestAt: Date;
 
   @Column({ type: 'datetime' })
-  public expiresAt: Date;
+  public expiredAt: Date;
 
   @Column({
     type: 'enum',
