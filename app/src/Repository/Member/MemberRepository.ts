@@ -1,6 +1,6 @@
-import { Repository } from 'typeorm';
 import { CustomRepository } from '../../typeorm-ex.decorator';
 import { Member } from '@Entity/Member/Member';
+import { DefaultRepository } from '../DefaultRepository';
 
 @CustomRepository(Member)
-export class MemberRepository extends Repository<Member> {}
+export class MemberRepository extends DefaultRepository<Member> {}
