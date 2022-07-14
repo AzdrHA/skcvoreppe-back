@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Logger as NestLogger } from '@nestjs/common';
+import { Logger as NestLogger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from '@Module/AppModule';
@@ -8,6 +8,7 @@ const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+  app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(app.get(ConfigService).get('basePath'));
   app.enableCors();
   await app.listen(process.env.APP_PORT);

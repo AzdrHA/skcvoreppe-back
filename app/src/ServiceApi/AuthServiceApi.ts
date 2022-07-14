@@ -13,6 +13,8 @@ import { UserRepository } from '@Repository/User/UserRepository';
 import { TokenRepository } from '@Repository/TokenRepository';
 import { RefreshTokenRepository } from '@Repository/RefreshTokenRepository';
 import { TranslatorService } from 'nestjs-translator';
+import { TokenFormat } from '@Entity/Token';
+import { ResetPasswordAuthDto } from '../Type/dto/Auth/ResetPasswordAuthDto';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
@@ -55,6 +57,7 @@ export class AuthServiceApi extends DefaultServiceApi {
       userData.password,
     );
 
+    console.log(userData);
     if (userData.type === 'admin' && userData.role === UserRoles.ROLE_USER)
       throw new ApiException(
         this.translator.translate('EMAIL_OR_PASSWORD_INCORRECT'),
@@ -78,7 +81,10 @@ export class AuthServiceApi extends DefaultServiceApi {
     if (!user)
       throw new ApiException(this.translator.translate('USER_NOT_FOUND'));
 
-    const token = this.tokenService.generateToken(user);
+    const token = this.tokenService.generateToken(
+      user,
+      TokenFormat.FORGOT_PASSWORD,
+    );
     await this.tokenRepository.save(token);
 
     await this.notifEventDispatcher.dispatchMessage(
@@ -90,8 +96,34 @@ export class AuthServiceApi extends DefaultServiceApi {
   }
 
   public async refresh(request: Request, refreshToken: string) {
-    await this.jwtTokenService.checkRefreshToken(refreshToken);
+    return this.jwtTokenService.checkRefreshToken(refreshToken);
+  }
 
-    // const user = this.userRepository.findOneBy();
+  public async verifyToken(request: Request, token: string, type: string) {
+    const checksToken = await this.tokenRepository.validToken(token, type);
+
+    if (!checksToken)
+      throw new ApiException(
+        this.translator.translate('TOKEN_INVALID_OR_EXPIRED'),
+      );
+
+    return checksToken;
+  }
+
+  public async resetPassword(request: Request, data: ResetPasswordAuthDto) {
+    if (data.password !== data.confirmPassword)
+      throw new ApiException(
+        this.translator.translate('PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH'),
+      );
+
+    const user = await this.userRepository.getUserFromToken(
+      data.token,
+      data.type,
+    );
+
+    await this.authService.encryptPassword(user, data.password);
+    await this.userRepository.save(user);
+    await this.tokenRepository.remove(user.tokens);
+    return this.userService.serializeUser(user);
   }
 }
