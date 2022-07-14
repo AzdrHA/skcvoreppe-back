@@ -4,20 +4,24 @@ import { EventContent } from '@Entity/Event/EventContent';
 @Entity('event')
 export class Event {
   public static readonly USER_FORGOT_PASSWORD = 'user:password:forgot-request';
+  public static readonly USER_REGISTER = 'user:register';
 
-  public static readonly EVENT_LIST = [Event.USER_FORGOT_PASSWORD];
+  public static readonly EVENT_LIST = [
+    Event.USER_FORGOT_PASSWORD,
+    Event.USER_REGISTER,
+  ];
 
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'enum', nullable: true, enum: [Event.EVENT_LIST] })
-  public code?: string | null = null;
+  @Column({ type: 'varchar' })
+  public code: string;
 
-  @Column({ type: 'varchar', nullable: true, default: null })
-  public name?: string | null = null;
+  @Column({ type: 'varchar' })
+  public name: string;
 
-  @Column({ type: 'varchar', nullable: true, default: null })
-  public description?: string | null = null;
+  @Column({ type: 'varchar' })
+  public description: string;
 
   @OneToOne(() => EventContent, (eventContent) => eventContent.event)
   public eventContent: EventContent;

@@ -1,0 +1,6 @@
+{
+  "INVALID_REFRESH_TOKEN": "Le token d'actualisation n'existe pas ou est invalide",
+  "EMAIL_OR_PASSWORD_INCORRECT": "Mauvais identifiant ou mot de passe.",
+  "USER_NOT_FOUND": "L'utilisateur est introuvable",
+  "ACCOUNT_NOT_ENABLED": "Vous n'avez pas encore valider votre compte"
+}

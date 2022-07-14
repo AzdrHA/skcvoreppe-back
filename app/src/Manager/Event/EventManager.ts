@@ -1,7 +1,9 @@
 import { Event } from '@Entity/Event/Event';
 import { EventContent } from '@Entity/Event/EventContent';
 import { EventContentRepository } from '@Repository/Event/EventContentRepository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EventManager {
   private eventContentRepository: EventContentRepository;
   constructor(eventContentRepository: EventContentRepository) {

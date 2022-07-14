@@ -42,4 +42,16 @@ export class AuthController extends DefaultController {
       args: [email],
     });
   }
+
+  @Post('/refresh')
+  public refresh(
+    @Req() request: Request,
+    @Body('refresh_token') token: string,
+  ) {
+    return this.handleRequest(request, {
+      function: 'refresh',
+      service: this.authServiceApi,
+      args: [token],
+    });
+  }
 }

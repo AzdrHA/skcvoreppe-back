@@ -46,6 +46,9 @@ export class User implements NotifiableEntityInterface {
   @Column({ type: 'varchar', nullable: true })
   public phone: string | null;
 
+  @Column({ type: 'boolean', default: false })
+  public enabled = false;
+
   @Column({ type: 'date' })
   public dateOfBirth: Date;
 
