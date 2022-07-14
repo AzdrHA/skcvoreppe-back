@@ -12,16 +12,18 @@ import { UserServiceCommand } from '@ServiceCommand/User/UserServiceCommand';
 import { EventServiceCommand } from '@ServiceCommand/Event/EventServiceCommand';
 import { UserGenderServiceCommand } from '@ServiceCommand/User/UserGenderServiceCommand';
 import { EventContentRepository } from '@Repository/Event/EventContentRepository';
+import { AuthService } from '@Service/AuthService';
+import { UserService } from '@Service/UserService';
 
 @Module({
   imports: [
-    BaseCommandModule,
     TypeOrmExModule.forCustomRepository([
       UserRepository,
       EventRepository,
       EventContentRepository,
       UserGenderRepository,
     ]),
+    BaseCommandModule,
   ],
   providers: [
     EventManager,
@@ -31,6 +33,8 @@ import { EventContentRepository } from '@Repository/Event/EventContentRepository
     InitUsersCommand,
     InitEventsCommand,
     InitUserGenderCommand,
+    AuthService,
+    UserService,
   ],
 })
 export class CommandModule {}

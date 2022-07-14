@@ -3,4 +3,8 @@ import { DefaultServiceCommand } from '@ServiceCommand/DefaultServiceCommand';
 import { UserRepository } from '@Repository/User/UserRepository';
 
 @Injectable()
-export class UserServiceCommand extends DefaultServiceCommand<UserRepository> {}
+export class UserServiceCommand extends DefaultServiceCommand<UserRepository> {
+  constructor(repository: UserRepository) {
+    super(repository);
+  }
+}

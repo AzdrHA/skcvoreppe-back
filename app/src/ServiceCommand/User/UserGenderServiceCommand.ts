@@ -3,4 +3,8 @@ import { DefaultServiceCommand } from '@ServiceCommand/DefaultServiceCommand';
 import { UserGenderRepository } from '@Repository/User/UserGenderRepository';
 
 @Injectable()
-export class UserGenderServiceCommand extends DefaultServiceCommand<UserGenderRepository> {}
+export class UserGenderServiceCommand extends DefaultServiceCommand<UserGenderRepository> {
+  constructor(repository: UserGenderRepository) {
+    super(repository);
+  }
+}

@@ -6,14 +6,10 @@ import { EventManager } from '../../Manager/Event/EventManager';
 @Injectable()
 export class EventServiceCommand extends DefaultServiceCommand<EventRepository> {
   private readonly eventManager: EventManager;
-  constructor(eventRepository: EventRepository, eventManager: EventManager) {
-    super(eventRepository);
+  constructor(repository: EventRepository, eventManager: EventManager) {
+    super(repository);
 
     this.eventManager = eventManager;
-  }
-
-  public getManager(): EventManager {
-    return this.eventManager;
   }
 
   public init(code: string) {

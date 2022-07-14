@@ -1,21 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { User, UserRoles } from '@Entity/User/User';
-import * as bcrypt from 'bcrypt';
 import { UserServiceCommand } from '@ServiceCommand/User/UserServiceCommand';
 import { UserGenderServiceCommand } from '@ServiceCommand/User/UserGenderServiceCommand';
+import { AuthService } from '@Service/AuthService';
 
 @Injectable()
 export class InitUsersCommand {
   private userServiceCommand: UserServiceCommand;
   private userGenderServiceCommand: UserGenderServiceCommand;
+  private authService: AuthService;
 
   constructor(
     userServiceCommand: UserServiceCommand,
     userGenderServiceCommand: UserGenderServiceCommand,
+    authService: AuthService,
   ) {
     this.userServiceCommand = userServiceCommand;
     this.userGenderServiceCommand = userGenderServiceCommand;
+    this.authService = authService;
   }
 
   public users: {
@@ -77,7 +80,6 @@ export class InitUsersCommand {
           code: user.gender,
         });
 
-      const salt = await bcrypt.genSalt();
       let nUser = await this.userServiceCommand
         .getRepository()
         .findOneBy({ email: user.email });
@@ -86,8 +88,7 @@ export class InitUsersCommand {
       nUser.lastname = user.lastname;
       nUser.email = user.email;
       nUser.role = user.role;
-      nUser.password = await bcrypt.hash('Azeqsd38', salt);
-      nUser.salt = salt;
+      await this.authService.encryptPassword(nUser, 'Azeqsd38');
       nUser.dateOfBirth = new Date(user.dateOfBirth);
       nUser.lastLoginAt = new Date();
       nUser.createdAt = new Date();
