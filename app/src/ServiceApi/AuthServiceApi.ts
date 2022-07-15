@@ -57,7 +57,6 @@ export class AuthServiceApi extends DefaultServiceApi {
       userData.password,
     );
 
-    console.log(userData);
     if (userData.type === 'admin' && userData.role === UserRoles.ROLE_USER)
       throw new ApiException(
         this.translator.translate('EMAIL_OR_PASSWORD_INCORRECT'),
