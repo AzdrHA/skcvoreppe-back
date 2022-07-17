@@ -44,6 +44,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.4.0",
     "sib-api-v3-typescript": "^2.2.2",
+    "stripe": "^9.13.0",
     "typeorm": "^0.3.7",
     "yargs": "^17.5.1"
   },
