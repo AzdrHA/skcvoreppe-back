@@ -69,9 +69,7 @@ export class AuthServiceApi extends DefaultServiceApi {
   }
 
   public async register(request: Request, userDate: User) {
-    const user = this.userRepository.create(userDate);
-    await this.authService.encryptPassword(user, user.password);
-    await this.userRepository.save(user);
+    const user = await this.userService.createOrUpdateCustomer(userDate);
     return this.userService.serializeUser(user);
   }
 
@@ -106,6 +104,11 @@ export class AuthServiceApi extends DefaultServiceApi {
         this.translator.translate('TOKEN_INVALID_OR_EXPIRED'),
       );
 
+    if (type === TokenFormat.EMAIL_VERIFICATION) {
+      checksToken.user.enabled = true;
+      await this.userRepository.save(checksToken.user);
+    }
+    await this.tokenRepository.remove(checksToken);
     return checksToken;
   }
 
@@ -120,7 +123,7 @@ export class AuthServiceApi extends DefaultServiceApi {
       data.type,
     );
 
-    await this.authService.encryptPassword(user, data.password);
+    await this.userService.encryptPassword(user, data.password);
     await this.userRepository.save(user);
     await this.tokenRepository.remove(user.tokens);
     return this.userService.serializeUser(user);

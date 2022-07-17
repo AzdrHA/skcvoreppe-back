@@ -44,10 +44,4 @@ export class AuthService {
       this.translator.translate('EMAIL_OR_PASSWORD_INCORRECT'),
     );
   }
-
-  public async encryptPassword(user: User, plainPassword: string) {
-    const salt = await bcrypt.genSalt();
-    user.salt = salt;
-    user.password = await bcrypt.hash(plainPassword, salt);
-  }
 }
