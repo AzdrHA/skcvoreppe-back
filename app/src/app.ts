@@ -8,7 +8,12 @@ const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      groups: ['login', 'register', 'forgotPassword'],
+    }),
+  );
   app.setGlobalPrefix(app.get(ConfigService).get('basePath'));
   app.enableCors();
   await app.listen(process.env.APP_PORT);
