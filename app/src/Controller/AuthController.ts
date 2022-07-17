@@ -34,6 +34,7 @@ export class AuthController extends DefaultController {
   }
 
   @Post('/register')
+  @UsePipes(new ValidationPipe({ groups: ['register'] }))
   public register(@Req() request: Request, @Body() user: User) {
     return this.handleRequest(request, {
       function: 'register',

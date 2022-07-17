@@ -10,10 +10,12 @@ import { UserRepository } from '@Repository/User/UserRepository';
 import { EventRepository } from '@Repository/Event/EventRepository';
 import { UserGenderRepository } from '@Repository/User/UserGenderRepository';
 import { CommandModule } from '@Module/CommandModule';
+import { StripModule } from '@Module/StripModule';
 
 @Module({
   imports: [
     CommandModule,
+    StripModule,
     TypeOrmExModule.forCustomRepository([
       UserRepository,
       EventRepository,

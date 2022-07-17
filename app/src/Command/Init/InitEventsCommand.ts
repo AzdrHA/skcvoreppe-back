@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
-import { Event } from '@Entity/Event/Event';
 import { EventServiceCommand } from '@ServiceCommand/Event/EventServiceCommand';
+import { initDataEvents } from '@Command/initData/InitDataEvents';
 
 @Injectable()
 export class InitEventsCommand {
@@ -11,22 +11,9 @@ export class InitEventsCommand {
     this.eventServiceCommand = eventServiceCommand;
   }
 
-  public events = [
-    {
-      code: Event.USER_FORGOT_PASSWORD,
-      name: 'Mot de passe oublié',
-      description: 'Quand un utilisateur oublie son mot de passe',
-    },
-    {
-      code: Event.USER_REGISTER,
-      name: 'Message de bienvenue',
-      description: "Quand un nouveau adhérent s'inscrit",
-    },
-  ];
-
   @Command({ command: 'init:events:create' })
   public async execute() {
-    for (const event of this.events) {
+    for (const event of initDataEvents) {
       let eventDb = await this.eventServiceCommand
         .getRepository()
         .findOneBy({ code: event.code });

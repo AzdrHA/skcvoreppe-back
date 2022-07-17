@@ -10,6 +10,7 @@ export default (): AppConfigInterface => ({
   emailSenderEmail: process.env.EMAIL_SEND_EMAIL,
   emailContact: process.env.EMAIL_CONTACT,
   phoneContact: process.env.PHONE_CONTACT,
+  stripApiKey: process.env.STRIP_API_KEY,
   siret: process.env.SIRET,
   database: DatabaseConfiguration(),
   jwt: JwtConfiguration(),

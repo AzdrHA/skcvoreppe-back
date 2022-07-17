@@ -6,6 +6,7 @@ import { DefaultRepository } from '@Repository/DefaultRepository';
 export class TokenRepository extends DefaultRepository<Token> {
   public validToken = (token: string, type: string) => {
     return this.createQueryBuilder('t')
+      .leftJoinAndSelect('t.user', 'user')
       .where('t.token = :token')
       .andWhere('t.type = :type')
       .andWhere('t.expiredAt > :expiredAt')

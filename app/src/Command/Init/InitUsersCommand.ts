@@ -1,79 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { Command } from 'nestjs-command';
-import { User, UserRoles } from '@Entity/User/User';
+import { User } from '@Entity/User/User';
 import { UserServiceCommand } from '@ServiceCommand/User/UserServiceCommand';
 import { UserGenderServiceCommand } from '@ServiceCommand/User/UserGenderServiceCommand';
-import { AuthService } from '@Service/AuthService';
+import { InitDataUser } from '@Command/initData/InitDataUser';
+import { UserService } from '@Service/UserService';
 
 @Injectable()
 export class InitUsersCommand {
   private userServiceCommand: UserServiceCommand;
   private userGenderServiceCommand: UserGenderServiceCommand;
-  private authService: AuthService;
+  private userService: UserService;
 
   constructor(
     userServiceCommand: UserServiceCommand,
     userGenderServiceCommand: UserGenderServiceCommand,
-    authService: AuthService,
+    userService: UserService,
   ) {
     this.userServiceCommand = userServiceCommand;
     this.userGenderServiceCommand = userGenderServiceCommand;
-    this.authService = authService;
+    this.userService = userService;
   }
-
-  public users: {
-    firstname: string;
-    lastname: string;
-    email: string;
-    role: UserRoles;
-    dateOfBirth: string;
-    gender: string;
-  }[] = [
-    {
-      firstname: 'Baptiste',
-      lastname: 'Brand',
-      email: 'azdracito@gmail.com',
-      role: UserRoles.ROLE_SYSADMIN,
-      dateOfBirth: '2002-04-28',
-      gender: 'male',
-    },
-    {
-      firstname: 'Etienne',
-      lastname: 'César',
-      email: 'etienne.cesar@laposte.net',
-      role: UserRoles.ROLE_ADMIN,
-      dateOfBirth: '2002-04-28',
-      gender: 'male',
-    },
-    {
-      firstname: 'Michel',
-      lastname: 'Vanvolsem',
-      email: 'michelvanvolsem@hotmail.com',
-      role: UserRoles.ROLE_ADMIN,
-      dateOfBirth: '2002-04-28',
-      gender: 'male',
-    },
-    {
-      firstname: 'Ilan',
-      lastname: 'El yandouzi',
-      email: 'elyandouzi.ilan@gmail.com',
-      role: UserRoles.ROLE_ADMIN,
-      dateOfBirth: '2002-04-28',
-      gender: 'male',
-    },
-    {
-      firstname: 'Emmanuel',
-      lastname: 'Raoelina',
-      email: 'emmanuel.raoelina.karate@gmail.com',
-      role: UserRoles.ROLE_ADMIN,
-      dateOfBirth: '2002-04-28',
-      gender: 'male',
-    },
-  ];
 
   @Command({ command: 'init:users:create' })
   public async execute() {
-    for (const user of this.users) {
+    for (const user of InitDataUser) {
       const gender = await this.userGenderServiceCommand
         .getRepository()
         .findOneBy({
@@ -83,18 +34,20 @@ export class InitUsersCommand {
       let nUser = await this.userServiceCommand
         .getRepository()
         .findOneBy({ email: user.email });
+
       if (!nUser) nUser = new User();
-      nUser.firstname = user.firstname;
-      nUser.lastname = user.lastname;
+      nUser.firstName = user.firstname;
+      nUser.lastName = user.lastname;
       nUser.email = user.email;
       nUser.role = user.role;
-      await this.authService.encryptPassword(nUser, 'Azeqsd38');
+      nUser.password = 'Azeqsd38';
       nUser.dateOfBirth = new Date(user.dateOfBirth);
       nUser.lastLoginAt = new Date();
       nUser.createdAt = new Date();
       nUser.updateAt = new Date();
       nUser.gender = gender;
-      await this.userServiceCommand.save(nUser);
+      // await this.userServiceCommand.save(nUser);
+      await this.userService.createOrUpdateCustomer(nUser);
       console.log(`${user.firstname} ${user.lastname} created!`);
     }
   }

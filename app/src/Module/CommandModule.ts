@@ -14,6 +14,9 @@ import { UserGenderServiceCommand } from '@ServiceCommand/User/UserGenderService
 import { EventContentRepository } from '@Repository/Event/EventContentRepository';
 import { AuthService } from '@Service/AuthService';
 import { UserService } from '@Service/UserService';
+import { InitProductCommand } from '@Command/Init/InitProductCommand';
+import { StripModule } from '@Module/StripModule';
+import { TestStripPaymentIntents } from '@Command/Test/TestStripPaymentIntents';
 
 @Module({
   imports: [
@@ -24,6 +27,7 @@ import { UserService } from '@Service/UserService';
       UserGenderRepository,
     ]),
     BaseCommandModule,
+    StripModule,
   ],
   providers: [
     EventManager,
@@ -33,6 +37,8 @@ import { UserService } from '@Service/UserService';
     InitUsersCommand,
     InitEventsCommand,
     InitUserGenderCommand,
+    InitProductCommand,
+    TestStripPaymentIntents,
     AuthService,
     UserService,
   ],

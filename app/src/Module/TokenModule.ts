@@ -5,6 +5,9 @@ import { JwtTokenService } from '@Service/Jwt/JwtTokenService';
 import { TypeOrmExModule } from '../typeorm-ex.module';
 import { RefreshTokenRepository } from '@Repository/RefreshTokenRepository';
 import { UserService } from '@Service/UserService';
+import { StripService } from '@Service/StripService';
+import { UserRepository } from '@Repository/User/UserRepository';
+import { StripConnector } from '@Connector/StripConnector';
 
 @Module({
   imports: [
@@ -13,13 +16,28 @@ import { UserService } from '@Service/UserService';
       useFactory: (configService: ConfigService) => configService.get('jwt'),
       inject: [ConfigService],
     }),
-    TypeOrmExModule.forCustomRepository([RefreshTokenRepository]),
+    TypeOrmExModule.forCustomRepository([
+      RefreshTokenRepository,
+      UserRepository,
+    ]),
   ],
-  providers: [JwtTokenService, UserService],
-  exports: [
+  providers: [
+    ConfigService,
     JwtTokenService,
     UserService,
-    TypeOrmExModule.forCustomRepository([RefreshTokenRepository]),
+    StripConnector,
+    StripService,
+  ],
+  exports: [
+    ConfigService,
+    JwtTokenService,
+    UserService,
+    StripConnector,
+    StripService,
+    TypeOrmExModule.forCustomRepository([
+      RefreshTokenRepository,
+      UserRepository,
+    ]),
   ],
 })
 export class TokenModule {}
