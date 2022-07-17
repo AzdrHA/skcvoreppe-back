@@ -12,6 +12,7 @@ import { NotifiableEntityInterface } from '../../Type/NotifiableEntityInterface'
 import { Member } from '@Entity/Member/Member';
 import { UserGender } from '@Entity/User/UserGender';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Order } from '@Entity/Order/Order';
 
 export enum UserRoles {
   ROLE_USER = 'ROLE_USER',
@@ -25,10 +26,14 @@ export class User implements NotifiableEntityInterface {
   public id: number;
 
   @Column({ type: 'varchar' })
-  public firstname: string;
+  @IsString({ groups: ['register'] })
+  @IsNotEmpty({ groups: ['register'] })
+  public firstName: string;
 
   @Column({ type: 'varchar' })
-  public lastname: string;
+  @IsString({ groups: ['register'] })
+  @IsNotEmpty({ groups: ['register'] })
+  public lastName: string;
 
   @IsString({ groups: ['login'] })
   @IsNotEmpty({ groups: ['login'] })
@@ -38,19 +43,28 @@ export class User implements NotifiableEntityInterface {
   @Column({ type: 'varchar' })
   public salt: string;
 
-  @IsString({ groups: ['forgotPassword', 'login'] })
-  @IsNotEmpty({ groups: ['forgotPassword', 'login'] })
-  @IsEmail({ groups: ['forgotPassword', 'login'] })
+  @IsString({ groups: ['forgotPassword', 'login', 'register'] })
+  @IsNotEmpty({ groups: ['forgotPassword', 'login', 'register'] })
+  @IsEmail({ groups: ['forgotPassword', 'login', 'register'] })
   @Column({ type: 'varchar', unique: true })
   public email: string;
 
   @Column({ type: 'varchar', nullable: true })
+  @IsString({ groups: ['register'] })
+  @IsNotEmpty({ groups: ['register'] })
   public phone: string | null;
+
+  @IsString({ groups: ['register'] })
+  @IsNotEmpty({ groups: ['register'] })
+  @Column({ type: 'varchar', nullable: true })
+  public extern_id?: string | undefined;
 
   @Column({ type: 'boolean', default: false })
   public enabled = false;
 
   @Column({ type: 'date' })
+  @IsString({ groups: ['register'] })
+  @IsNotEmpty({ groups: ['register'] })
   public dateOfBirth: Date;
 
   @Column({ type: 'varchar', nullable: true })
@@ -65,18 +79,28 @@ export class User implements NotifiableEntityInterface {
   @UpdateDateColumn({ type: 'datetime' })
   public updateAt: Date;
 
-  @OneToMany(() => Token, (token) => token.user)
+  @OneToMany(() => Token, (token) => token.user, { nullable: true })
   public tokens: Token[];
 
   @OneToMany(() => Member, (member) => member.user)
   public members: Member[];
 
-  @ManyToOne(() => UserGender, (gender) => gender.user)
-  public gender: UserGender;
+  @ManyToOne(() => UserGender, (gender) => gender.user, { nullable: true })
+  public gender?: UserGender;
+
+  @OneToMany(() => Order, (order) => order.owner)
+  public orders: Order[];
 
   transformObjectToEventData(): { [p: string]: string } {
     return {
-      password: this.password,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      fullName: this.email,
+      email: this.email,
     };
   }
+
+  public displayName = () => {
+    return this.lastName + ' ' + this.firstName;
+  };
 }

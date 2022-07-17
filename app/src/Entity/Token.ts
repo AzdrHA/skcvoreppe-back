@@ -35,8 +35,8 @@ export class Token implements NotifiableEntityInterface {
   })
   public type: TokenFormat;
 
-  @ManyToOne(() => User, (user) => user.tokens)
-  public user: User;
+  @ManyToOne(() => User, (user) => user.tokens, { nullable: true })
+  public user?: User;
 
   transformObjectToEventData(): { [key: string]: any } {
     return {

@@ -12,7 +12,7 @@ export class Member implements NotifiableEntityInterface {
   public season: string = UtilDate.getCurrentSeason();
 
   @ManyToOne(() => User, (user) => user.members, { nullable: false })
-  public user: User;
+  public user?: User;
 
   public transformObjectToEventData(): { [p: string]: any } {
     return {};
