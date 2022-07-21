@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -9,6 +11,7 @@ import {
 } from 'typeorm';
 import { ProductPrice } from '@Entity/Product/ProductPrice';
 import { Order } from '@Entity/Order/Order';
+import { UtilStr } from '../../Util/UtilStr';
 
 @Entity('product')
 export class Product {
@@ -17,6 +20,9 @@ export class Product {
 
   @Column({ type: 'varchar', nullable: false })
   public name: string;
+
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  public code: string;
 
   @Column({ type: 'varchar', nullable: true })
   public description?: string;
@@ -35,4 +41,10 @@ export class Product {
 
   @OneToMany(() => Order, (order) => order.product)
   public orders: Order[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  private BeforeInsertAndBeforeUpdate() {
+    return (this.code = UtilStr.slugify(this.name).toUpperCase());
+  }
 }

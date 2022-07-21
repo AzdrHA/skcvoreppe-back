@@ -8,6 +8,7 @@ import { UserService } from '@Service/UserService';
 import { StripService } from '@Service/StripService';
 import { UserRepository } from '@Repository/User/UserRepository';
 import { StripConnector } from '@Connector/StripConnector';
+import { OrderRepository } from '@Repository/Order/OrderRepository';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { StripConnector } from '@Connector/StripConnector';
     TypeOrmExModule.forCustomRepository([
       RefreshTokenRepository,
       UserRepository,
+      OrderRepository,
     ]),
   ],
   providers: [

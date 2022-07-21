@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { StripConnector } from '@Connector/StripConnector';
 import { Stripe } from 'stripe';
 import { User } from '@Entity/User/User';
+import { Order } from '@Entity/Order/Order';
 
 export type ProductParams = Stripe.ProductCreateParams & { unit_price: number };
 
 @Injectable()
 export class StripService {
   private stripConnector: StripConnector;
+  public static apiOrderVersion = '2020-08-27;orders_beta=v4';
 
   constructor(stripConnector: StripConnector) {
     this.stripConnector = stripConnector;
@@ -70,5 +72,67 @@ export class StripService {
         email: user.email,
       });
     }
+  }
+
+  private static dataParams(
+    order: Order,
+    action: 'create' | 'update',
+  ): Stripe.OrderCreateParams {
+    return <Stripe.OrderCreateParams>Object.assign(
+      {
+        currency: 'eur',
+      },
+      action === 'create'
+        ? {
+            line_items: [
+              {
+                product: order.product.extern_id,
+                quantity: 1,
+                price: order.product.productPrice.extern_id,
+              },
+            ],
+            customer: order.owner.extern_id,
+          }
+        : {},
+    );
+  }
+
+  public async sendOrder(id: string, amount: number) {
+    return this.stripConnector.getOrders().submit(
+      id,
+      {
+        expected_total: amount,
+      },
+      { apiVersion: StripService.apiOrderVersion },
+    );
+  }
+
+  public async createOrUpdateOrder(order: Order, action: 'create' | 'update') {
+    if (!order.extern_id) {
+      return this.stripConnector
+        .getOrders()
+        .create(StripService.dataParams(order, action), {
+          apiVersion: StripService.apiOrderVersion,
+        });
+    }
+    try {
+      return this.stripConnector
+        .getOrders()
+        .update(order.extern_id, StripService.dataParams(order, action), {
+          apiVersion: StripService.apiOrderVersion,
+        });
+    } catch (e) {
+      return this.stripConnector
+        .getOrders()
+        .create(StripService.dataParams(order, action), {
+          apiVersion: StripService.apiOrderVersion,
+        });
+    }
+  }
+
+  public async getOrder(id: string) {
+    return this.stripConnector.getOrders().retrieve(id, {
+      apiVersion: StripService.apiOrderVersion,
+    });
   }
 }

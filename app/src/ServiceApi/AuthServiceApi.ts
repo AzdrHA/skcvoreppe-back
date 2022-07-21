@@ -15,6 +15,7 @@ import { RefreshTokenRepository } from '@Repository/RefreshTokenRepository';
 import { TranslatorService } from 'nestjs-translator';
 import { TokenFormat } from '@Entity/Token';
 import { ResetPasswordAuthDto } from '../Type/dto/Auth/ResetPasswordAuthDto';
+import { OrderRepository } from '@Repository/Order/OrderRepository';
 
 @Injectable()
 export class AuthServiceApi extends DefaultServiceApi {
@@ -27,6 +28,7 @@ export class AuthServiceApi extends DefaultServiceApi {
   private tokenRepository: TokenRepository;
   private refreshTokenRepository: RefreshTokenRepository;
   private translator: TranslatorService;
+  private orderRepository: OrderRepository;
 
   public constructor(
     jwtTokenService: JwtTokenService,
@@ -38,6 +40,7 @@ export class AuthServiceApi extends DefaultServiceApi {
     tokenRepository: TokenRepository,
     refreshTokenRepository: RefreshTokenRepository,
     translator: TranslatorService,
+    orderRepository: OrderRepository,
   ) {
     super();
     this.jwtTokenService = jwtTokenService;
@@ -49,6 +52,7 @@ export class AuthServiceApi extends DefaultServiceApi {
     this.tokenRepository = tokenRepository;
     this.refreshTokenRepository = refreshTokenRepository;
     this.translator = translator;
+    this.orderRepository = orderRepository;
   }
 
   public async login(request: Request, userData: User & { type: string }) {
@@ -65,6 +69,7 @@ export class AuthServiceApi extends DefaultServiceApi {
     return {
       ...user,
       ...(await this.jwtTokenService.sign({ email: userData.email })),
+      card: await this.orderRepository.findCurrentCard(user['id']),
     };
   }
 

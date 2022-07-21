@@ -10,12 +10,19 @@ import { TypeOrmExModule } from '../typeorm-ex.module';
 import { UserRepository } from '@Repository/User/UserRepository';
 import { TokenRepository } from '@Repository/TokenRepository';
 import { TokenModule } from '@Module/TokenModule';
+import { OrderRepository } from '@Repository/Order/OrderRepository';
+import { OrderModule } from '@Module/OrderModule';
 
 @Module({
   imports: [
     MailerModule,
     TokenModule,
-    TypeOrmExModule.forCustomRepository([UserRepository, TokenRepository]),
+    OrderModule,
+    TypeOrmExModule.forCustomRepository([
+      UserRepository,
+      TokenRepository,
+      OrderRepository,
+    ]),
   ],
   controllers: [AuthController],
   providers: [

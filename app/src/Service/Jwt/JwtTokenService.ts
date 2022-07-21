@@ -8,6 +8,7 @@ import { ApiException } from '../../Exception/ApiException';
 import { TranslatorService } from 'nestjs-translator';
 import { User } from '@Entity/User/User';
 import { UserService } from '@Service/UserService';
+import { OrderRepository } from '@Repository/Order/OrderRepository';
 
 @Injectable()
 export class JwtTokenService {
@@ -15,17 +16,20 @@ export class JwtTokenService {
   private refreshTokenRepository: RefreshTokenRepository;
   private translator: TranslatorService;
   private userService: UserService;
+  private orderRepository: OrderRepository;
 
   public constructor(
     jwtService: JwtService,
     refreshTokenRepository: RefreshTokenRepository,
     translator: TranslatorService,
     userService: UserService,
+    orderRepository: OrderRepository,
   ) {
     this.jwtService = jwtService;
     this.refreshTokenRepository = refreshTokenRepository;
     this.translator = translator;
     this.userService = userService;
+    this.orderRepository = orderRepository;
   }
 
   public async sign(payload: { email: string }, options?: JwtSignOptions) {
@@ -59,12 +63,17 @@ export class JwtTokenService {
       .setParameter('refresh_token', refreshToken)
       .getOne();
 
+    console.log(token);
+
     if (token && token.valid > new Date()) {
       return {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         ...this.userService.serializeUser(token.user),
         ...(await this.sign({ email: token.email })),
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        card: await this.orderRepository.findCurrentCard(token.user.id),
       };
     }
 

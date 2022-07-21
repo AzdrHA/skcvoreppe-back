@@ -37,4 +37,8 @@ export class StripConnector {
   public getCustomers(): Stripe.CustomersResource {
     return this.stripe.customers;
   }
+
+  public getOrders() {
+    return this.stripe.orders;
+  }
 }

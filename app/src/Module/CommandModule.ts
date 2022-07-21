@@ -17,6 +17,9 @@ import { UserService } from '@Service/UserService';
 import { InitProductCommand } from '@Command/Init/InitProductCommand';
 import { StripModule } from '@Module/StripModule';
 import { TestStripPaymentIntents } from '@Command/Test/TestStripPaymentIntents';
+import { OrderService } from '@Service/Order/OrderService';
+import { OrderRepository } from '@Repository/Order/OrderRepository';
+import { ProductRepository } from '@Repository/Product/ProductRepository';
 
 @Module({
   imports: [
@@ -25,6 +28,8 @@ import { TestStripPaymentIntents } from '@Command/Test/TestStripPaymentIntents';
       EventRepository,
       EventContentRepository,
       UserGenderRepository,
+      OrderRepository,
+      ProductRepository,
     ]),
     BaseCommandModule,
     StripModule,
@@ -41,6 +46,7 @@ import { TestStripPaymentIntents } from '@Command/Test/TestStripPaymentIntents';
     TestStripPaymentIntents,
     AuthService,
     UserService,
+    OrderService,
   ],
 })
 export class CommandModule {}
